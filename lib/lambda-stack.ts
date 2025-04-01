@@ -3,8 +3,12 @@ import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 
+interface LambdaStackProps extends cdk.StackProps {
+  layerVersion: lambda.LayerVersion;
+}
+
 export class LambdaStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: LambdaStackProps) {
     super(scope, id, props);
 
     new lambda.Function(this, 'MyFunction', {
@@ -12,8 +16,7 @@ export class LambdaStack extends cdk.Stack {
       handler: 'handler.lambda_handler',
       code: lambda.Code.fromAsset('src/lambda'),
       layers: [
-        lambda.LayerVersion.fromLayerVersionArn(this, 'MyLayer',
-          ssm.StringParameter.valueForStringParameter(this, 'layer-arn'))
+        props.layerVersion,
       ]
     });
 
