@@ -9,5 +9,6 @@ new PipelineStack(app, 'PipelineStack', {
   env: { account: '352770552266', region: 'eu-central-1' },
 });
 
-new LayerStack(app, 'LayerStack');
-new LambdaStack(app, 'LambdaStack');
+const layerStack = new LayerStack(app, 'LayerStack');
+const lambdaStack = new LambdaStack(app, 'LambdaStack');
+lambdaStack.addDependency(layerStack);
