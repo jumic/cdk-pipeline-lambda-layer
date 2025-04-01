@@ -8,7 +8,6 @@ export class PipelineStack extends cdk.Stack {
     super(scope, id, props);
 
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
-      selfMutation: false,
       synth: new pipelines.ShellStep('Synth', {
         input: pipelines.CodePipelineSource.connection('jumic/cdk-pipeline-lambda-layer', 'main', {
           connectionArn:
