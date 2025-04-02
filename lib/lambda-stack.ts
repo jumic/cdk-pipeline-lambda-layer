@@ -3,6 +3,7 @@ import { Construct } from 'constructs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import * as codedeploy from 'aws-cdk-lib/aws-codedeploy';
+import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
 
 export class LambdaStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -23,9 +24,19 @@ export class LambdaStack extends cdk.Stack {
       version: myFunction.currentVersion,
     });
 
+    const alarm = new cloudwatch.Alarm(this, 'Errors', {
+      comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+      threshold: 1,
+      evaluationPeriods: 1,
+      metric: alias.metricErrors(),
+    });
+
     new codedeploy.LambdaDeploymentGroup(this, 'MyFunctionDeploymentGroup', {
       alias,
       deploymentConfig: codedeploy.LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
+      alarms: [
+        alarm,
+      ],
     });
 
   }
