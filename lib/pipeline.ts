@@ -9,7 +9,7 @@ export class PipelineStack extends cdk.Stack {
 
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
       synth: new pipelines.ShellStep('Synth', {
-        input: pipelines.CodePipelineSource.connection('jumic/cdk-pipeline-lambda-layer', 'main', {
+        input: pipelines.CodePipelineSource.connection('jumic/cdk-pipeline-lambda-layer', 'canary', {
           connectionArn:
             'arn:aws:codestar-connections:eu-central-1:352770552266:connection/f10d531d-7adf-45ab-811d-fa114d9e518c',
         }),
